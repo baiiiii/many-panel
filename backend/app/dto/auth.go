@@ -6,9 +6,10 @@ type CaptchaResponse struct {
 }
 
 type UserLoginInfo struct {
-	Name      string `json:"name"`
-	Token     string `json:"token"`
-	MfaStatus string `json:"mfaStatus"`
+	Name          string `json:"name"`
+	Token         string `json:"token"`
+	MfaStatus     string `json:"mfaStatus"`
+	DefaultHostId string `json:"defaultHostId"`
 }
 
 type MfaRequest struct {

@@ -2,6 +2,7 @@ package v1
 
 import (
 	"encoding/base64"
+	"strconv"
 
 	"github.com/1Panel-dev/1Panel/backend/app/api/v1/helper"
 	"github.com/1Panel-dev/1Panel/backend/app/dto"
@@ -47,6 +48,12 @@ func (b *BaseApi) Login(c *gin.Context) {
 		helper.ErrorWithDetail(c, constant.CodeErrInternalServer, constant.ErrTypeInternalServer, err)
 		return
 	}
+
+	mpHost, _ := mpHostService.LoginDefaultHost()
+	if mpHost != nil {
+		user.DefaultHostId = strconv.Itoa(int(mpHost.ID))
+	}
+
 	helper.SuccessWithData(c, user)
 }
 
@@ -75,6 +82,12 @@ func (b *BaseApi) MFALogin(c *gin.Context) {
 		helper.ErrorWithDetail(c, constant.CodeErrInternalServer, constant.ErrTypeInternalServer, err)
 		return
 	}
+
+	mpHost, _ := mpHostService.LoginDefaultHost()
+	if mpHost != nil {
+		user.DefaultHostId = strconv.Itoa(int(mpHost.ID))
+	}
+
 	helper.SuccessWithData(c, user)
 }
 

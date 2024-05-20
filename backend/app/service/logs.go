@@ -1,7 +1,6 @@
 package service
 
 import (
-	"fmt"
 	"os"
 	"path"
 	"path/filepath"
@@ -11,10 +10,8 @@ import (
 
 	"github.com/1Panel-dev/1Panel/backend/app/dto"
 	"github.com/1Panel-dev/1Panel/backend/app/model"
-	"github.com/1Panel-dev/1Panel/backend/buserr"
 	"github.com/1Panel-dev/1Panel/backend/constant"
 	"github.com/1Panel-dev/1Panel/backend/global"
-	"github.com/1Panel-dev/1Panel/backend/utils/cmd"
 	"github.com/jinzhu/copier"
 	"github.com/pkg/errors"
 )
@@ -30,10 +27,6 @@ type ILogService interface {
 
 	CreateOperationLog(operation model.OperationLog) error
 	PageOperationLog(search dto.SearchOpLogWithPage) (int64, interface{}, error)
-
-	LoadSystemLog(name string) (string, error)
-
-	CleanLogs(logtype string) error
 }
 
 func NewILogService() ILogService {
@@ -118,38 +111,4 @@ func (u *LogService) PageOperationLog(req dto.SearchOpLogWithPage) (int64, inter
 		dtoOps = append(dtoOps, item)
 	}
 	return total, dtoOps, err
-}
-
-func (u *LogService) LoadSystemLog(name string) (string, error) {
-	if name == time.Now().Format("2006-01-02") {
-		name = "1Panel.log"
-	} else {
-		name = "1Panel-" + name + ".log"
-	}
-	filePath := path.Join(global.CONF.System.DataDir, "log", name)
-	if _, err := os.Stat(filePath); err != nil {
-		fileGzPath := path.Join(global.CONF.System.DataDir, "log", name+".gz")
-		if _, err := os.Stat(fileGzPath); err != nil {
-			return "", buserr.New("ErrHttpReqNotFound")
-		}
-		if err := handleGunzip(fileGzPath); err != nil {
-			return "", fmt.Errorf("handle ungzip file %s failed, err: %v", fileGzPath, err)
-		}
-	}
-	content, err := os.ReadFile(filePath)
-	if err != nil {
-		return "", err
-	}
-	return string(content), nil
-}
-
-func (u *LogService) CleanLogs(logtype string) error {
-	if logtype == "operation" {
-		return logRepo.CleanOperation()
-	}
-	return logRepo.CleanLogin()
-}
-
-func writeLogs(version string) {
-	_, _ = cmd.Execf("curl -sfL %s | sh -s 1p upgrade %s", logs, version)
 }

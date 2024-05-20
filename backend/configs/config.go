@@ -1,6 +1,6 @@
 package configs
 
 type ServerConfig struct {
-	System    System    `mapstructure:"system"`
-	LogConfig LogConfig `mapstructure:"log"`
+	System    System    `mapstructure:"system" yaml:"system"`
+	LogConfig LogConfig `mapstructure:"log" yaml:"log"`
 }

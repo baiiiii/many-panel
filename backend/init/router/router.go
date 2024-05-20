@@ -9,12 +9,9 @@ import (
 	"github.com/1Panel-dev/1Panel/backend/i18n"
 	"github.com/1Panel-dev/1Panel/backend/middleware"
 	rou "github.com/1Panel-dev/1Panel/backend/router"
-	"github.com/1Panel-dev/1Panel/cmd/server/docs"
 	"github.com/1Panel-dev/1Panel/cmd/server/web"
 	"github.com/gin-contrib/gzip"
 	"github.com/gin-gonic/gin"
-	swaggerfiles "github.com/swaggo/files"
-	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 var (
@@ -23,7 +20,7 @@ var (
 
 func setWebStatic(rootRouter *gin.RouterGroup) {
 	rootRouter.StaticFS("/public", http.FS(web.Favicon))
-	rootRouter.Static("/api/v1/images", "./uploads")
+	rootRouter.Static("/api/mp/images", "./uploads")
 	rootRouter.Use(func(c *gin.Context) {
 		c.Next()
 	})
@@ -56,26 +53,27 @@ func Routers() *gin.Engine {
 
 	Router.Use(i18n.UseI18n())
 
-	swaggerRouter := Router.Group("1panel")
-	docs.SwaggerInfo.BasePath = "/api/v1"
-	swaggerRouter.Use(middleware.JwtAuth()).Use(middleware.SessionAuth()).GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 	PublicGroup := Router.Group("")
 	{
 		PublicGroup.GET("/health", func(c *gin.Context) {
 			c.JSON(200, "ok")
 		})
 		baseApi := v1.ApiGroupApp.BaseApi
-		PublicGroup.GET("/api/v1/respagecode", baseApi.GetResponsePage)
+		PublicGroup.GET("/api/mp/respagecode", baseApi.GetResponsePage)
 		PublicGroup.Use(gzip.Gzip(gzip.DefaultCompression))
 		setWebStatic(PublicGroup)
 	}
-	PrivateGroup := Router.Group("/api/v1")
+	PrivateGroup := Router.Group("/api/mp")
 	PrivateGroup.Use(middleware.WhiteAllow())
 	PrivateGroup.Use(middleware.BindDomain())
 	PrivateGroup.Use(middleware.GlobalLoading())
 	for _, router := range rou.RouterGroupApp {
 		router.InitRouter(PrivateGroup)
 	}
+
+	V1Group := Router.Group("/api/v1")
+	mpProxyRouter := &rou.MpProxyRouter{}
+	mpProxyRouter.InitRouter(V1Group)
 
 	return Router
 }
