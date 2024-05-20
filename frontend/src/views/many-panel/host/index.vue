@@ -37,7 +37,6 @@ import OperatorDialog from '@/views/many-panel/host/operator/index.vue';
 import { reactive, onMounted, ref } from 'vue';
 import { MpHost } from '@/api/interface/mp-host';
 import { searchMpHost, deleteMpHost, setDefaultHost } from '@/api/mp/mp-host';
-import { logOutApi } from '@/api/mp/auth';
 import i18n from '@/lang';
 
 const loading = ref();
@@ -99,9 +98,7 @@ const onSetDefaultHost = async (row: MpHost.HostInfo) => {
         msg: '设为默认?',
         api: setDefaultHost,
         params: { id: id },
-        successMsg: i18n.global.t('commons.status.success'),
     });
-    await logOutApi();
 };
 
 const buttons = [
