@@ -27,6 +27,7 @@
 </template>
 
 <script setup lang="ts">
+defineOptions({ name: 'Terminal' });
 import HostTab from '@/views/host/terminal/host/index.vue';
 import CommandTab from '@/views/host/terminal/command/index.vue';
 import TerminalTab from '@/views/host/terminal/terminal/index.vue';

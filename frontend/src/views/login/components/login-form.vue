@@ -120,7 +120,7 @@
                             {{ $t('commons.button.login') }}
                         </el-button>
                     </el-form-item>
-                    <el-form-item prop="agreeLicense">
+                    <el-form-item prop="agreeLicense" v-if="false">
                         <el-checkbox v-model="loginForm.agreeLicense">
                             <template #default>
                                 <span
@@ -152,7 +152,7 @@
 import { ref, reactive, onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import type { ElForm } from 'element-plus';
-import { loginApi, getCaptcha, mfaLoginApi, checkIsDemo, getLanguage } from '@/api/modules/auth';
+import { loginApi, getCaptcha, mfaLoginApi, checkIsDemo, getLanguage } from '@/api/mp/auth';
 import { GlobalStore, MenuStore, TabsStore } from '@/store';
 import i18n from '@/lang';
 import { MsgSuccess } from '@/utils/message';
@@ -242,10 +242,10 @@ const login = (formEl: FormInstance | undefined) => {
             errCaptcha.value = true;
             return;
         }
-        if (loginForm.agreeLicense == false) {
+        /*if (loginForm.agreeLicense == false) {
             errAgree.value = true;
             return;
-        }
+        }*/
         try {
             isLoggingIn = true;
             loading.value = true;
@@ -276,7 +276,18 @@ const login = (formEl: FormInstance | undefined) => {
             tabsStore.removeAllTabs();
             MsgSuccess(i18n.global.t('commons.msg.loginSuccess'));
             loadProductProFromDB();
-            router.push({ name: 'home' });
+            if (res.code === 200) {
+                if (res.data.defaultHostId) {
+                    sessionStorage.setItem('host-id', res.data.defaultHostId);
+                    localStorage.setItem('default-host-id', res.data.defaultHostId);
+                    router.push({ name: 'home' });
+                    return;
+                } else {
+                    sessionStorage.setItem('host-id', '');
+                    localStorage.setItem('default-host-id', '');
+                }
+            }
+            router.push({ name: 'mp' });
         } catch (error) {
             loginVerify();
         } finally {
@@ -303,7 +314,18 @@ const mfaLogin = async (auto: boolean) => {
         tabsStore.removeAllTabs();
         MsgSuccess(i18n.global.t('commons.msg.loginSuccess'));
         loadProductProFromDB();
-        router.push({ name: 'home' });
+        if (res.code === 200) {
+            if (res.data.defaultHostId) {
+                sessionStorage.setItem('host-id', res.data.defaultHostId);
+                localStorage.setItem('default-host-id', res.data.defaultHostId);
+                router.push({ name: 'home' });
+                return;
+            } else {
+                sessionStorage.setItem('host-id', '');
+                localStorage.setItem('default-host-id', '');
+            }
+        }
+        router.push({ name: 'mp' });
     }
 };
 const loginVerify = async () => {

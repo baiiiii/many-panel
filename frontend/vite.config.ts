@@ -43,6 +43,11 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
                     changeOrigin: true,
                     ws: true,
                 },
+                '/api/mp': {
+                    target: 'http://localhost:9999/',
+                    changeOrigin: true,
+                    ws: true,
+                },
             },
         },
         plugins: [

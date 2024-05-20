@@ -80,6 +80,7 @@
 <script setup lang="ts">
 import FireRouter from '@/views/host/process/index.vue';
 import { ref, onMounted, onUnmounted, nextTick, reactive } from 'vue';
+import { newWebSocket } from '@/hooks/websocket';
 
 interface SortStatus {
     prop: '';
@@ -171,7 +172,7 @@ const initProcess = () => {
     let href = window.location.href;
     let protocol = href.split('//')[0] === 'http:' ? 'ws' : 'wss';
     let ipLocal = href.split('//')[1].split('/')[0];
-    processSocket = new WebSocket(`${protocol}://${ipLocal}/api/v1/process/ws`);
+    processSocket = newWebSocket(`${protocol}://${ipLocal}/api/v1/process/ws`);
     processSocket.onopen = onOpenProcess;
     processSocket.onmessage = onMessage;
     processSocket.onerror = onerror;

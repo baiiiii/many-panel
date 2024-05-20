@@ -41,7 +41,7 @@
 </template>
 
 <script setup lang="ts" name="login">
-import { checkIsSafety, getResponsePage } from '@/api/modules/auth';
+import { checkIsSafety, getResponsePage } from '@/api/mp/auth';
 import LoginForm from '../components/login-form.vue';
 import UnSafe from '@/components/error-message/unsafe.vue';
 import ErrIP from '@/components/error-message/err_ip.vue';

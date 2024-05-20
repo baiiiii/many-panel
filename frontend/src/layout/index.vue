@@ -9,13 +9,13 @@
             <mobile-header v-if="classObj.mobile" />
             <Tabs v-if="classObj.openMenuTabs" />
             <app-main :keep-alive="classObj.openMenuTabs ? tabsStore.cachedTabs : null" class="app-main" />
-            <Footer class="app-footer" v-if="!globalStore.isFullScreen" />
+            <Footer class="app-footer" v-if="false" />
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, computed, ref, watch, onBeforeUnmount } from 'vue';
+import { onMounted, computed, ref, watch, onBeforeUnmount, onBeforeMount } from 'vue';
 import { Sidebar, Footer, AppMain, MobileHeader, Tabs } from './components';
 import useResize from './hooks/useResize';
 import { GlobalStore, MenuStore, TabsStore } from '@/store';
@@ -156,6 +156,17 @@ const loadStatus = async () => {
 onBeforeUnmount(() => {
     clearInterval(Number(timer));
     timer = null;
+});
+onBeforeMount(() => {
+    if (!sessionStorage.getItem('host-id')) {
+        sessionStorage.setItem('host-id', localStorage.getItem('default-host-id'));
+    }
+    if (route.query.id) {
+        const id = route.query.id as string;
+        sessionStorage.setItem('host-id', id);
+    }
+    if (sessionStorage.getItem('host-id')) {
+    }
 });
 onMounted(() => {
     if (globalStore.openMenuTabs && !tabsStore.activeTabPath) {

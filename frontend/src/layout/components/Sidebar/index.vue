@@ -39,7 +39,7 @@ import Logo from './components/Logo.vue';
 import Collapse from './components/Collapse.vue';
 import SubItem from './components/SubItem.vue';
 import router, { menuList } from '@/routers/router';
-import { logOutApi } from '@/api/modules/auth';
+import { logOutApi } from '@/api/mp/auth';
 import i18n from '@/lang';
 import { ElMessageBox } from 'element-plus';
 import { GlobalStore, MenuStore } from '@/store';
@@ -128,10 +128,28 @@ function getCheckedLabels(json: Node): string[] {
 }
 
 const search = async () => {
+    let rstMenuList: RouteRecordRaw[] = [];
+    if (!sessionStorage.getItem('host-id')) {
+        menuStore.menuList.forEach((item) => {
+            let menuItem = JSON.parse(JSON.stringify(item));
+            let menuChildren: RouteRecordRaw[] = [];
+            if (menuItem.path === '/mp') {
+                menuItem.children.forEach((child: any) => {
+                    if (child.hidden == undefined || child.hidden == false) {
+                        menuChildren.push(child);
+                    }
+                });
+                menuItem.children = menuChildren as RouteRecordRaw[];
+                rstMenuList.push(menuItem);
+            }
+        });
+        menuStore.menuList = rstMenuList;
+        return;
+    }
+
     const res = await getSettingInfo();
     const json: Node = JSON.parse(res.data.xpackHideMenu);
     const checkedLabels = getCheckedLabels(json);
-    let rstMenuList: RouteRecordRaw[] = [];
     menuStore.menuList.forEach((item) => {
         let menuItem = JSON.parse(JSON.stringify(item));
         let menuChildren: RouteRecordRaw[] = [];

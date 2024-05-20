@@ -60,6 +60,7 @@ import { oneDark } from '@codemirror/theme-one-dark';
 import { MsgError } from '@/utils/message';
 import { GlobalStore } from '@/store';
 import screenfull from 'screenfull';
+import { newWebSocket } from '@/hooks/websocket';
 
 const extensions = [javascript(), oneDark];
 
@@ -134,7 +135,7 @@ const searchLogs = async () => {
     const href = window.location.href;
     const protocol = href.split('//')[0] === 'http:' ? 'ws' : 'wss';
     const host = href.split('//')[1].split('/')[0];
-    terminalSocket.value = new WebSocket(
+    terminalSocket.value = newWebSocket(
         `${protocol}://${host}/api/v1/containers/compose/search/log?compose=${logSearch.compose}&since=${logSearch.mode}&tail=${logSearch.tail}&follow=${logSearch.isWatch}`,
     );
     terminalSocket.value.onmessage = (event) => {

@@ -17,6 +17,7 @@ export namespace Login {
         name: string;
         token: string;
         mfaStatus: string;
+        defaultHostId: string;
     }
     export interface ResCaptcha {
         imagePath: string;

@@ -24,6 +24,7 @@ import { FileKeys } from '@/api/modules/files';
 import { computeSize } from '@/utils/util';
 import { onBeforeUnmount, ref, toRefs } from 'vue';
 import MsgInfo from '@/components/msg-info/index.vue';
+import { newWebSocket } from '@/hooks/websocket';
 
 const props = defineProps({
     open: {
@@ -64,7 +65,7 @@ const initProcess = () => {
     let href = window.location.href;
     let protocol = href.split('//')[0] === 'http:' ? 'ws' : 'wss';
     let ipLocal = href.split('//')[1].split('/')[0];
-    processSocket = new WebSocket(`${protocol}://${ipLocal}/api/v1/files/ws`);
+    processSocket = newWebSocket(`${protocol}://${ipLocal}/api/v1/files/ws`);
     processSocket.onopen = onOpenProcess;
     processSocket.onmessage = onMessage;
     processSocket.onerror = onerror;

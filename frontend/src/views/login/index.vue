@@ -19,7 +19,7 @@
 </template>
 
 <script setup lang="ts" name="login">
-import { checkIsSafety } from '@/api/modules/auth';
+import { checkIsSafety } from '@/api/mp/auth';
 import LoginForm from './components/login-form.vue';
 import { ref, onMounted } from 'vue';
 import router from '@/routers';

@@ -54,6 +54,7 @@ import { javascript } from '@codemirror/lang-javascript';
 import { oneDark } from '@codemirror/theme-one-dark';
 import { MsgError, MsgSuccess } from '@/utils/message';
 import { GlobalStore } from '@/store';
+import { newWebSocket } from '@/hooks/websocket';
 const globalStore = GlobalStore();
 
 const extensions = [javascript(), oneDark];
@@ -108,7 +109,7 @@ const searchLogs = async () => {
     const href = window.location.href;
     const protocol = href.split('//')[0] === 'http:' ? 'ws' : 'wss';
     const host = href.split('//')[1].split('/')[0];
-    terminalSocket.value = new WebSocket(
+    terminalSocket.value = newWebSocket(
         `${protocol}://${host}/api/v1/containers/search/log?container=${logSearch.containerID}&since=${logSearch.mode}&tail=${logSearch.tail}&follow=${logSearch.isWatch}`,
     );
     terminalSocket.value.onmessage = (event) => {

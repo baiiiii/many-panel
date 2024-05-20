@@ -1,7 +1,7 @@
 import axios, { AxiosInstance, AxiosError, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 import { ResultData } from '@/api/interface';
 import { ResultEnum } from '@/enums/http-enum';
-import { checkStatus } from './helper/check-status';
+import { checkStatus } from '../helper/check-status';
 import router from '@/routers';
 import { GlobalStore } from '@/store';
 import { MsgError } from '@/utils/message';
@@ -10,7 +10,7 @@ import { Base64 } from 'js-base64';
 const globalStore = GlobalStore();
 
 const config = {
-    baseURL: import.meta.env.VITE_API_URL as string,
+    baseURL: import.meta.env.VITE_MPAPI_URL as string,
     timeout: ResultEnum.TIMEOUT as number,
     withCredentials: true,
 };
@@ -25,7 +25,6 @@ class RequestHttp {
                 config.headers = {
                     'Accept-Language': language,
                     ...config.headers,
-                    'host-id': sessionStorage.getItem('host-id'),
                 };
                 if (config.url === '/auth/login' || config.url === '/auth/mfalogin') {
                     let entrance = Base64.encode(globalStore.entrance);
@@ -114,7 +113,7 @@ class RequestHttp {
     }
     post<T>(url: string, params?: object, timeout?: number): Promise<ResultData<T>> {
         return this.service.post(url, params, {
-            baseURL: import.meta.env.VITE_API_URL as string,
+            baseURL: import.meta.env.VITE_MPAPI_URL as string,
             timeout: timeout ? timeout : (ResultEnum.TIMEOUT as number),
             withCredentials: true,
         });
