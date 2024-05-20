@@ -1,9 +1,0 @@
-//go:build !xpack
-
-package xpack
-
-func RemoveTamper(website string) {}
-
-func LoadGpuInfo() []interface{} {
-	return nil
-}
