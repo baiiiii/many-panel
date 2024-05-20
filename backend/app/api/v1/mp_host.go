@@ -130,6 +130,10 @@ func (b *BaseApi) SetDefaultHost(c *gin.Context) {
 		helper.ErrorWithDetail(c, constant.CodeErrBadRequest, constant.ErrTypeInternalServer, nil)
 		return
 	}
+	if err := authService.LogOut(c); err != nil {
+		helper.ErrorWithDetail(c, constant.CodeErrInternalServer, constant.ErrTypeInternalServer, err)
+		return
+	}
 	helper.SuccessWithData(c, nil)
 }
 
