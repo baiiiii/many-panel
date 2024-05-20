@@ -98,6 +98,7 @@ const onSetDefaultHost = async (row: MpHost.HostInfo) => {
         msg: '设为默认?',
         api: setDefaultHost,
         params: { id: id },
+        successMsg: i18n.global.t('commons.status.success'),
     });
 };
 
