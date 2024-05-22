@@ -9,6 +9,7 @@ import (
 
 func Init() {
 	m := gormigrate.New(global.DB, gormigrate.DefaultOptions, []*gormigrate.Migration{
+		migrations.AddTableOperationLog,
 		migrations.AddTableSetting,
 		migrations.AddTableMpHost,
 	})

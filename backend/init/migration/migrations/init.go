@@ -22,6 +22,13 @@ var AddTableMpHost = &gormigrate.Migration{
 	},
 }
 
+var AddTableOperationLog = &gormigrate.Migration{
+	ID: "20200809-add-table-operation-log",
+	Migrate: func(tx *gorm.DB) error {
+		return tx.AutoMigrate(&model.OperationLog{}, &model.LoginLog{})
+	},
+}
+
 var AddTableSetting = &gormigrate.Migration{
 	ID: "20200908-add-table-setting",
 	Migrate: func(tx *gorm.DB) error {
