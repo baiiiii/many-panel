@@ -24,6 +24,8 @@ func (b *BaseApi) ApiProxyHandler(c *gin.Context) {
 		return
 	}
 	c.Request.Header.Set("Panelauthorization", string(token))
+	c.Request.Header.Set("Host", "127.0.0.1")
+	c.Request.Host = "127.0.0.1"
 	proxyUrl, _ := url.Parse(string(host))
 	proxy := httputil.NewSingleHostReverseProxy(proxyUrl)
 	proxy.ServeHTTP(c.Writer, c.Request)

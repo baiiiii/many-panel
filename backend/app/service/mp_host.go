@@ -134,7 +134,18 @@ func (mpHostService *MpHostService) LoginHost(ID string) (mpHost *model.MpHost, 
 		Timeout: time.Second * 3,
 	}
 
-	resp, err := client.Post(url, "application/json", bytes.NewBuffer(jsonData))
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
+	if err != nil {
+		return
+	}
+
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Host", "127.0.0.1")
+	req.Host = "127.0.0.1"
+
+	// resp, err := client.Post(url, "application/json", bytes.NewBuffer(jsonData))
+
+	resp, err := client.Do(req)
 	if err != nil {
 		return
 	}
